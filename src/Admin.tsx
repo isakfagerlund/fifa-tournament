@@ -3,17 +3,15 @@ import './App.css';
 import { User } from './models/user';
 import CreateGame from './CreateGame';
 import { initialUsers } from './initialUsers';
-import { collection, onSnapshot } from 'firebase/firestore';
+import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
 import { Game } from './models/game';
 import { db } from './firebase';
 import {
   Button,
   Checkbox,
   Group,
-  Input,
   Modal,
   NumberInput,
-  Select,
   Space,
   Stack,
   Table,
@@ -40,11 +38,13 @@ const Admin = () => {
   });
 
   useEffect(() => {
-    const unsubGames = onSnapshot(collection(db, 'games'), (data) => {
-      const gamesData = data.docs.map(
+    const q = query(collection(db, 'games'), orderBy('gameOrder', 'asc'));
+    const unsubGames = onSnapshot(q, (data) => {
+      const games = data.docs.map(
         (doc) => ({ ...doc.data(), id: doc.id } as Game)
       );
-      setGames(gamesData);
+
+      setGames(games);
     });
 
     return () => {
@@ -54,6 +54,7 @@ const Admin = () => {
 
   const rows = games?.map((game, i) => (
     <tr
+      className="tableRow"
       onClick={() => {
         form.setValues({
           teamOneScore: game.scores.teamOne,
@@ -66,7 +67,8 @@ const Admin = () => {
       }}
       key={i}
     >
-      <td>{game.inProgress ? 'Yes' : 'No'}</td>
+      <td>{game.gameOrder}</td>
+      <td>{game.inProgress ? '✅' : '⛔️'}</td>
       <td>
         {game.players.teamOne.map((name, i) => (
           <Text key={i} tt="capitalize">
@@ -90,14 +92,17 @@ const Admin = () => {
   return (
     <div style={{ padding: 60 }}>
       <Stack>
-        <Title>Admin Page</Title>
+        <Title size="h3" align="center">
+          Admin Page
+        </Title>
         <div>
-          <CreateGame users={users} />
+          <CreateGame users={users} gamesLength={games?.length ?? 0} />
         </div>
         <div>
           <Table>
             <thead>
               <tr>
+                <th>Game order</th>
                 <th>In Progress</th>
                 <th>Team 1</th>
                 <th>Team 2</th>

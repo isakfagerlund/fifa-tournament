@@ -8,5 +8,7 @@ export interface Game {
     teamTwo: number;
   };
   inProgress: boolean;
+  dateCreated: number;
+  gameOrder: number;
   id?: string;
 }

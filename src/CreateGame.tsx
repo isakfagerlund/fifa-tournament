@@ -4,7 +4,13 @@ import { Button, Group, Select, Space, Stack, Text } from '@mantine/core';
 import { Game } from './models/game';
 import { createGame } from './services/games.service';
 
-const CreateGame = ({ users }: { users: User[] | undefined }) => {
+const CreateGame = ({
+  users,
+  gamesLength,
+}: {
+  users: User[] | undefined;
+  gamesLength: number;
+}) => {
   const form = useForm({
     initialValues: {
       teamOnePlayerOne: '',
@@ -30,6 +36,8 @@ const CreateGame = ({ users }: { users: User[] | undefined }) => {
                 teamTwo: 0,
               },
               inProgress: false,
+              dateCreated: new Date().getTime(),
+              gameOrder: gamesLength + 1,
             };
 
             createGame(newGame);

@@ -40,3 +40,8 @@
   width: 100%;
   border-bottom: 1px solid white;
 }
+
+.tableRow:hover {
+  opacity: 0.6;
+  cursor: pointer;
+}

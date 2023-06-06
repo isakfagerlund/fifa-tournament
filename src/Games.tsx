@@ -1,16 +1,20 @@
 import { useEffect, useState } from 'react';
 import './App.css';
-import { MantineProvider } from '@mantine/core';
+import { MantineProvider, Stack } from '@mantine/core';
 import { Game } from './models/game';
-import { collection, onSnapshot } from 'firebase/firestore';
+import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
 import { db } from './firebase';
 
 const Games = () => {
   const [games, setGames] = useState<Game[]>();
 
   useEffect(() => {
-    const unsubGames = onSnapshot(collection(db, 'games'), (data) => {
-      const games = data.docs.map((doc) => doc.data() as Game);
+    const q = query(collection(db, 'games'), orderBy('gameOrder', 'asc'));
+    const unsubGames = onSnapshot(q, (data) => {
+      const games = data.docs.map(
+        (doc) => ({ ...doc.data(), id: doc.id } as Game)
+      );
+
       setGames(games);
     });
 
@@ -20,7 +24,7 @@ const Games = () => {
   }, []);
 
   return (
-    <MantineProvider theme={{ colorScheme: 'dark' }}>
+    <Stack style={{ padding: 60 }}>
       <h2>Games</h2>
       {games?.map((game, i) => {
         return (
@@ -48,7 +52,7 @@ const Games = () => {
           </div>
         );
       })}
-    </MantineProvider>
+    </Stack>
   );
 };
 

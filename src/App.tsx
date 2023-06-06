@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import './App.css';
 import { User } from './models/user';
 import { db } from './firebase';
@@ -9,7 +9,7 @@ import { useAutoAnimate } from '@formkit/auto-animate/react';
 
 const App = () => {
   const [users, setUsers] = useState<User[]>(initialUsers);
-  const [games, setGames] = useState<Game[]>();
+  const [_, setGames] = useState<Game[]>();
   const [parent] = useAutoAnimate();
 
   const sortedUsers = [...users].sort((a, b) => {
@@ -29,143 +29,80 @@ const App = () => {
     return 0;
   });
 
-  const addWin = (player: User, goalDifference: number) => {
+  const updatePlayerPoints = useCallback((game: Game) => {
+    const getResult = (): {
+      winners: string[] | undefined;
+      loosers: string[] | undefined;
+      draw: string[] | undefined;
+    } => {
+      if (game.scores.teamOne > game.scores.teamTwo) {
+        return {
+          winners: game.players.teamOne,
+          loosers: game.players.teamTwo,
+          draw: undefined,
+        };
+      } else if (game.scores.teamOne < game.scores.teamTwo) {
+        return {
+          winners: game.players.teamTwo,
+          loosers: game.players.teamOne,
+          draw: undefined,
+        };
+      }
+
+      return {
+        winners: undefined,
+        loosers: undefined,
+        draw: [...game.players.teamOne, ...game.players.teamTwo],
+      };
+    };
+
     setUsers((prevUsers) => {
-      const updatedUsers = prevUsers?.map((user) => {
-        if (user.name === player.name) {
+      const { winners, loosers, draw } = getResult();
+
+      const updatedUsers = prevUsers.map((user) => {
+        if (winners?.includes(user.name)) {
           return {
-            ...player,
-            points: player.points + 3,
-            wins: player.wins + 1,
-            goalDifference: player.goalDifference + goalDifference,
-            matchesPlayed: player.matchesPlayed + 1,
+            ...user,
+            points: user.points + 3,
+            matchesPlayed: user.matchesPlayed + 1,
           };
-        } else {
-          return user;
+        } else if (loosers?.includes(user.name)) {
+          return {
+            ...user,
+            matchesPlayed: user.matchesPlayed + 1,
+          };
+        } else if (draw?.includes(user.name)) {
+          return {
+            ...user,
+            points: user.points + 1,
+            matchesPlayed: user.matchesPlayed + 1,
+          };
         }
+
+        return user;
       });
+
       return updatedUsers;
     });
-  };
-
-  const addLoss = (player: User, goalDifference: number) => {
-    setUsers((prevUsers) => {
-      const updatedUsers = prevUsers?.map((user) => {
-        if (user.name === player.name) {
-          return {
-            ...player,
-            losses: player.losses + 1,
-            goalDifference: player.goalDifference + goalDifference,
-            matchesPlayed: player.matchesPlayed + 1,
-          };
-        } else {
-          return user;
-        }
-      });
-      return updatedUsers;
-    });
-  };
-
-  const addDraw = (player: User) => {
-    setUsers((prevUsers) => {
-      const updatedUsers = prevUsers?.map((user) => {
-        if (user.name === player.name) {
-          return {
-            ...player,
-            points: player.points + 1,
-            draws: player.draws + 1,
-            matchesPlayed: player.matchesPlayed + 1,
-          };
-        } else {
-          return user;
-        }
-      });
-
-      return updatedUsers;
-    });
-  };
+  }, []);
 
   useEffect(() => {
-    setUsers(initialUsers);
-
     const unsubGames = onSnapshot(collection(db, 'games'), (data) => {
+      setUsers(initialUsers);
       const games = data.docs.map((doc) => doc.data() as Game);
 
+      games.forEach((game) => {
+        if (game.inProgress) {
+          updatePlayerPoints(game);
+        }
+      });
       setGames(games);
     });
 
     return () => {
       unsubGames();
     };
-  }, []);
-
-  useEffect(() => {
-    if (games) {
-      const calculateTableScore = (games: Game[]) => {
-        games.forEach((game) => {
-          if (!game.inProgress) return;
-          const teamOnePlayers = game.players.teamOne;
-          const teamTwoPlayers = game.players.teamTwo;
-          const { teamOne: teamOneScore, teamTwo: teamTwoScore } = game.scores;
-          const goalDifferenceTeamOne = teamTwoScore - teamOneScore;
-          const goalDifferenceTeamTwo = teamOneScore - teamTwoScore;
-
-          const firstPlayers = users?.filter((user) => {
-            return (
-              user.name === teamOnePlayers[0] || user.name === teamOnePlayers[1]
-            );
-          });
-          const secondPlayers = users?.filter((user) => {
-            return (
-              user.name === teamTwoPlayers[0] || user.name === teamTwoPlayers[1]
-            );
-          });
-
-          console.log(firstPlayers);
-          console.log(secondPlayers);
-
-          // Team one Wins
-          if (teamOneScore > teamTwoScore) {
-            if (firstPlayers) {
-              firstPlayers.forEach((player) => {
-                addWin(player, goalDifferenceTeamOne);
-              });
-            }
-
-            if (secondPlayers) {
-              secondPlayers.forEach((player) =>
-                addLoss(player, goalDifferenceTeamTwo)
-              );
-            }
-
-            // Team two Wins
-          } else if (teamOneScore < teamTwoScore) {
-            if (secondPlayers) {
-              secondPlayers.forEach((player) =>
-                addWin(player, goalDifferenceTeamTwo)
-              );
-            }
-            if (firstPlayers) {
-              firstPlayers.forEach((player) =>
-                addLoss(player, goalDifferenceTeamOne)
-              );
-            }
-
-            // Draw
-          } else if (teamOneScore === teamTwoScore) {
-            if (secondPlayers) {
-              secondPlayers.forEach((player) => addDraw(player));
-            }
-            if (firstPlayers) {
-              firstPlayers.forEach((player) => addDraw(player));
-            }
-          }
-        });
-      };
-
-      calculateTableScore(games);
-    }
-  }, [games]);
+  }, [updatePlayerPoints]);
 
   return (
     <div className="container">
