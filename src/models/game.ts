@@ -1,11 +1,12 @@
 export interface Game {
   players: {
-    teamOne: string[]
-    teamTwo: string[]
-  }
+    teamOne: string[];
+    teamTwo: string[];
+  };
   scores: {
-    teamOne: number
-    teamTwo: number
-  }
-  inProgress: boolean
+    teamOne: number;
+    teamTwo: number;
+  };
+  inProgress: boolean;
+  id?: string;
 }

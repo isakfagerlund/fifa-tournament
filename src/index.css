@@ -18,12 +18,12 @@
   -webkit-text-size-adjust: 100%;
 }
 
-body, html {
+body,
+html {
   margin: 0;
 }
 
 body {
-  padding: 60px;
   height: 100vh;
 }
 
