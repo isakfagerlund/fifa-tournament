@@ -1,0 +1,40 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.table {
+  width: 100%;
+  display: grid;
+  grid-template-rows: repeat(13, 50px);
+}
+
+.row {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.row p {
+  padding-right: 24px;
+}
+
+.row > span {
+  border-bottom: 1px solid black;
+  padding-bottom: 12px;
+}
+
+.name {
+  text-transform: capitalize;
+}
+
+.game {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  border-bottom: 1px solid white;
+}
