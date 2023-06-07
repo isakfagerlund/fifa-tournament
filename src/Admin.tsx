@@ -27,6 +27,7 @@ const Admin = () => {
   const [games, setGames] = useState<Game[]>();
   const [opened, { open, close }] = useDisclosure(false);
   const [clickedGame, setClickedGame] = useState<Game | undefined>();
+  const [showCreateGame, setShowCreateGame] = useState(false);
 
   const form = useForm({
     initialValues: {
@@ -91,14 +92,15 @@ const Admin = () => {
 
   return (
     <div style={{ padding: 60 }}>
-      <Stack>
+      <Stack align="center">
         <Title size="h3" align="center">
           Admin Page
         </Title>
-        <div>
-          <CreateGame users={users} gamesLength={games?.length ?? 0} />
-        </div>
-        <div>
+        <div
+          style={{
+            width: '100%',
+          }}
+        >
           <Table>
             <thead>
               <tr>
@@ -114,6 +116,21 @@ const Admin = () => {
             <tbody>{rows}</tbody>
           </Table>
         </div>
+        <Button
+          variant="gradient"
+          gradient={{ from: 'orange', to: 'red' }}
+          onClick={() => setShowCreateGame(!showCreateGame)}
+          style={{
+            maxWidth: 200,
+          }}
+        >
+          Show Create Game
+        </Button>
+        {showCreateGame && (
+          <div>
+            <CreateGame users={users} gamesLength={games?.length ?? 0} />
+          </div>
+        )}
       </Stack>
       <Modal opened={opened} onClose={close} title="Edit game" centered>
         <Text>Game: {clickedGame?.id}</Text>

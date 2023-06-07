@@ -175,15 +175,15 @@ const App = () => {
                   justify="center"
                   gap={8}
                 >
-                  {user.previousGames.slice(-3).map((pGame) => {
+                  {user.previousGames.slice(-3).map((pGame, i) => {
                     const imgStyle = { width: 16, height: 16, marginTop: 4 };
 
                     if (pGame === 'win') {
-                      return <img style={imgStyle} src={winIcon} />;
+                      return <img key={i} style={imgStyle} src={winIcon} />;
                     } else if (pGame === 'loose') {
-                      return <img style={imgStyle} src={looseIcon} />;
+                      return <img key={i} style={imgStyle} src={looseIcon} />;
                     } else if (pGame === 'draw') {
-                      return <img style={imgStyle} src={drawIcon} />;
+                      return <img key={i} style={imgStyle} src={drawIcon} />;
                     }
                   })}
                 </Flex>
