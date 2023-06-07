@@ -4,7 +4,7 @@
   justify-content: center;
   align-items: center;
   width: 100%;
-  padding: 60px;
+  padding: 0 60px;
 }
 
 .table {
@@ -16,17 +16,18 @@
 .row {
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: 4fr repeat(6, 1fr) 100px;
 }
 
 .row p {
-  padding-right: 24px;
+  text-align: center;
 }
 
 .row > span {
   border-bottom: 1px solid black;
   padding-top: 12px;
   padding-bottom: 12px;
+  text-align: center;
 }
 
 .name {

@@ -9,6 +9,7 @@ export const initialUsers: User[] = [
     wins: 0,
     draws: 0,
     goalDifference: 0,
+    previousGames: [],
   },
   {
     name: 'isak',
@@ -18,6 +19,7 @@ export const initialUsers: User[] = [
     wins: 0,
     draws: 0,
     goalDifference: 0,
+    previousGames: [],
   },
   {
     name: 'daniel',
@@ -27,6 +29,7 @@ export const initialUsers: User[] = [
     wins: 0,
     draws: 0,
     goalDifference: 0,
+    previousGames: [],
   },
   {
     name: 'lily',
@@ -36,6 +39,7 @@ export const initialUsers: User[] = [
     wins: 0,
     draws: 0,
     goalDifference: 0,
+    previousGames: [],
   },
   {
     name: 'alberto',
@@ -45,6 +49,7 @@ export const initialUsers: User[] = [
     wins: 0,
     draws: 0,
     goalDifference: 0,
+    previousGames: [],
   },
   {
     name: 'sebastian',
@@ -54,6 +59,7 @@ export const initialUsers: User[] = [
     wins: 0,
     draws: 0,
     goalDifference: 0,
+    previousGames: [],
   },
   {
     name: 'johnny',
@@ -63,6 +69,7 @@ export const initialUsers: User[] = [
     wins: 0,
     draws: 0,
     goalDifference: 0,
+    previousGames: [],
   },
   {
     name: 'martins',
@@ -72,6 +79,7 @@ export const initialUsers: User[] = [
     wins: 0,
     draws: 0,
     goalDifference: 0,
+    previousGames: [],
   },
   {
     name: 'kayode',
@@ -81,6 +89,7 @@ export const initialUsers: User[] = [
     wins: 0,
     draws: 0,
     goalDifference: 0,
+    previousGames: [],
   },
   {
     name: 'gabriel',
@@ -90,6 +99,7 @@ export const initialUsers: User[] = [
     wins: 0,
     draws: 0,
     goalDifference: 0,
+    previousGames: [],
   },
   {
     name: 'dat',
@@ -99,6 +109,7 @@ export const initialUsers: User[] = [
     wins: 0,
     draws: 0,
     goalDifference: 0,
+    previousGames: [],
   },
   {
     name: 'excellence',
@@ -108,6 +119,7 @@ export const initialUsers: User[] = [
     wins: 0,
     draws: 0,
     goalDifference: 0,
+    previousGames: [],
   },
 ];
 
