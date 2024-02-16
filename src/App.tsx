@@ -6,7 +6,7 @@ import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
 import { Game } from './models/game';
 import { initialUsers } from './initialUsers';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
-import { Flex, Text } from '@mantine/core';
+import { Badge, Flex, MediaQuery, Text } from '@mantine/core';
 
 const winIcon =
   'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTZweCIgaGVpZ2h0PSIxNnB4IiB2aWV3Qm94PSIwIDAgMTYgMTYiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8ZyBpZD0iUGFnZS0xIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj4KICAgICAgICA8ZyBpZD0iV2luIj4KICAgICAgICAgICAgPGNpcmNsZSBpZD0iT3ZhbCIgZmlsbD0iIzNBQTc1NyIgY3g9IjgiIGN5PSI4IiByPSI4Ij48L2NpcmNsZT4KICAgICAgICAgICAgPHBvbHlnb24gaWQ9IlBhdGgiIGZpbGw9IiNGRkZGRkYiIGZpbGwtcnVsZT0ibm9uemVybyIgcG9pbnRzPSI2LjQgOS43NiA0LjMyIDcuNjggMy4yIDguOCA2LjQgMTIgMTIuOCA1LjYgMTEuNjggNC40OCI+PC9wb2x5Z29uPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+Cg==';
@@ -19,8 +19,6 @@ const App = () => {
   const [users, setUsers] = useState<User[]>(initialUsers);
   const [_, setGames] = useState<Game[]>();
   const [parent] = useAutoAnimate();
-
-  console.log(users);
 
   const sortedUsers = [...users].sort((a, b) => {
     // compare points
@@ -154,13 +152,35 @@ const App = () => {
           <Text align="center">Losses</Text>
           <Text align="center">GD</Text>
           <Text align="center">Points</Text>
-          <Text align="center">Last 3</Text>
+          <MediaQuery
+            query="(max-width: 600px)"
+            styles={{
+              display: 'none',
+            }}
+          >
+            <Text align="center">Last 3</Text>
+          </MediaQuery>
         </div>
         {sortedUsers?.map((user, i) => {
+          const isFirstPlace = i === 0 || i === 1;
+          const isSecondPlace = i === 2 || i === 3;
+          const isThirdPlace = i === 4 || i === 5;
+
+          let money = null;
+
+          if (isFirstPlace) {
+            money = '35€';
+          } else if (isSecondPlace) {
+            money = '15€';
+          } else if (isThirdPlace) {
+            money = '10€';
+          }
+
           return (
             <div className="row" key={user.name}>
               <Text className="name">
-                {i + 1} {user.name}
+                {i + 1} {user.name}{' '}
+                {money && <Badge color="green">{money}</Badge>}
               </Text>
               <Text align="center">{user.matchesPlayed}</Text>
               <Text align="center">{user.wins}</Text>
@@ -168,26 +188,33 @@ const App = () => {
               <Text align="center">{user.losses}</Text>
               <Text align="center">{user.goalDifference}</Text>
               <Text align="center">{user.points}</Text>
-              <Flex justify="center">
-                <Flex
-                  style={{ width: '100%' }}
-                  align="flex-start"
-                  justify="center"
-                  gap={8}
-                >
-                  {user.previousGames.slice(-3).map((pGame, i) => {
-                    const imgStyle = { width: 16, height: 16, marginTop: 4 };
+              <MediaQuery
+                query="(max-width: 600px)"
+                styles={{
+                  display: 'none',
+                }}
+              >
+                <Flex justify="center">
+                  <Flex
+                    style={{ width: '100%' }}
+                    align="flex-start"
+                    justify="center"
+                    gap={8}
+                  >
+                    {user.previousGames.slice(-3).map((pGame, i) => {
+                      const imgStyle = { width: 16, height: 16, marginTop: 4 };
 
-                    if (pGame === 'win') {
-                      return <img key={i} style={imgStyle} src={winIcon} />;
-                    } else if (pGame === 'loose') {
-                      return <img key={i} style={imgStyle} src={looseIcon} />;
-                    } else if (pGame === 'draw') {
-                      return <img key={i} style={imgStyle} src={drawIcon} />;
-                    }
-                  })}
+                      if (pGame === 'win') {
+                        return <img key={i} style={imgStyle} src={winIcon} />;
+                      } else if (pGame === 'loose') {
+                        return <img key={i} style={imgStyle} src={looseIcon} />;
+                      } else if (pGame === 'draw') {
+                        return <img key={i} style={imgStyle} src={drawIcon} />;
+                      }
+                    })}
+                  </Flex>
                 </Flex>
-              </Flex>
+              </MediaQuery>
             </div>
           );
         })}

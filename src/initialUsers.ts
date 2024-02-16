@@ -62,7 +62,7 @@ export const initialUsers: User[] = [
     previousGames: [],
   },
   {
-    name: 'johnny',
+    name: 'JJ',
     points: 0,
     losses: 0,
     matchesPlayed: 0,
@@ -123,15 +123,43 @@ export const initialUsers: User[] = [
   },
 ];
 
-// Jian
-// Isak
-// Daniel
-// Lily
-// Alberto
-// Sebastian
-// Johnny
-// Martins
-// Kayode
-// Gabriel
-// Dat
-// Excellence
+const testGames = [
+  // 'Jian & Isak vs. Daniel & Lily',
+  // 'Alberto & Sebastian vs. JJ & Martins',
+  // 'Kayode & Gabriel vs. Dat & Excellence',
+  // 'Jian & Daniel vs. Isak & Alberto',
+  // 'Lily & Sebastian vs. Martins & Kayode',
+  // 'Gabriel & Dat vs. JJ & Excellence',
+  // 'Jian & Lily vs. Isak & Sebastian',
+  // 'Daniel & Alberto vs. Martins & Gabriel',
+  // 'Kayode & JJ vs. Daniel & Excellence',
+  // 'Jian & Sebastian vs. Lily & Martins',
+  // 'Isak & JJ vs. Daniel & Dat',
+  // 'Alberto & Excellence vs. Martins & Gabriel',
+  // 'Jian & Alberto vs. Daniel & Excellence',
+  // 'Lily & Kayode vs. Sebastian & Gabriel',
+  // 'JJ & Dat vs. Martins & Isak',
+  // 'Jian & Kayode vs. Isak & Gabriel',
+  // 'Lily & JJ vs. Daniel & Kayode',
+  // 'Alberto & Dat vs. Sebastian & Excellence',
+  // 'Jian & Gabriel vs. Isak & Dat',
+  // 'Lily & Excellence vs. Martins & Alberto',
+  // 'JJ & Sebastian vs. Gabriel & Daniel',
+  // 'Jian & Dat vs. Isak & JJ',
+  // 'Lily & Gabriel vs. Martins & Dat',
+  // 'Alberto & Kayode vs. Sebastian & Excellence',
+  // 'Jian & Excellence vs. Isak & Kayode',
+  // 'Daniel & Alberto vs. Martins & JJ',
+  'Lily & Dat vs. Sebastian & Kayode',
+];
+
+export const getAmountOfTimes = (name: string) => {
+  let count = 0;
+
+  testGames.forEach((game) => {
+    if (game.includes(name)) {
+      count = count + 1;
+    }
+  });
+  return name + count;
+};

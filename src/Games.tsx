@@ -18,6 +18,8 @@ const Games = () => {
   const [games, setGames] = useState<Game[]>();
 
   useEffect(() => {
+    document.title = 'Games';
+
     const q = query(collection(db, 'games'), orderBy('gameOrder', 'asc'));
     const unsubGames = onSnapshot(q, (data) => {
       const games = data.docs.map(
